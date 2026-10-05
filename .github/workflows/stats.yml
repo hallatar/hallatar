@@ -12,7 +12,7 @@ on:
 jobs:
   update-stats:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     permissions:
       contents: write
 
@@ -38,30 +38,13 @@ jobs:
           path: assets/languages.svg
           token: ${{ secrets.README_TOKEN }}
 
-      - name: Setup PHP for streak stats
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-          tools: composer
-
       - name: Generate streak card (public + private)
-        env:
-          TOKEN: ${{ secrets.README_TOKEN }}
-        run: |
-          git clone --depth=1 https://github.com/DenverCoder1/github-readme-streak-stats.git /tmp/streak
-          cd /tmp/streak
-          composer install --no-interaction --no-dev
-          printf "TOKEN=%s\n" "$TOKEN" > .env
-          php -S 127.0.0.1:8000 >/tmp/streak-php.log 2>&1 &
-          for i in $(seq 1 45); do
-            if curl -sf "http://127.0.0.1:8000/?user=hallatar" >/dev/null; then
-              break
-            fi
-            sleep 2
-          done
-          curl -sf "http://127.0.0.1:8000/?user=hallatar&theme=github-dark-blue&hide_border=true&background=0D1117&stroke=161B22&ring=58A6FF&fire=1F6FEB&currStreakNum=C9D1D9&sideNums=C9D1D9&currStreakLabel=58A6FF&sideLabels=8B949E&dates=8B949E" \
-            -o "$GITHUB_WORKSPACE/assets/streak.svg"
-          test -s "$GITHUB_WORKSPACE/assets/streak.svg"
+        uses: DenverCoder1/github-readme-streak-stats@main
+        with:
+          options: >-
+            user=hallatar&theme=github-dark-blue&hide_border=true&background=0D1117&stroke=161B22&ring=58A6FF&fire=1F6FEB&currStreakNum=C9D1D9&sideNums=C9D1D9&currStreakLabel=58A6FF&sideLabels=8B949E&dates=8B949E
+          path: assets/streak.svg
+          token: ${{ secrets.README_TOKEN }}
 
       - name: Commit assets
         run: |
