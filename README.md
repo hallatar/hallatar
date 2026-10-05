@@ -78,7 +78,7 @@ Currently working with autonomous agents, LLM workflows, and production-scale in
 
 ### Education
 
-**Azad University (IAU)**
+**M.Sc. in Artificial Intelligence** — Azad University (IAU)
 
 ---
 
