@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - ".github/workflows/snake.yml"
 
 jobs:
   generate:
@@ -15,10 +17,11 @@ jobs:
       contents: write
 
     steps:
-      - name: Generate snake SVGs
+      - name: Generate snake SVGs (includes private with PAT)
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
+          github_token: ${{ secrets.README_TOKEN }}
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark

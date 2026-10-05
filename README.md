@@ -69,11 +69,11 @@ I design and ship systems where money moves — exchange backends, wallet/custod
 
 <div align="center">
 
-![Hallatar's GitHub stats](https://github-readme-stats.vercel.app/api?username=hallatar&show_icons=true&theme=github_dark&hide_border=true&bg_color=0d1117&title_color=58A6FF&icon_color=58A6FF&text_color=c9d1d9)
+![Hallatar's GitHub stats](./assets/stats.svg)
 
-![Top languages](https://github-readme-stats.vercel.app/api/top-langs/?username=hallatar&layout=compact&theme=github_dark&hide_border=true&bg_color=0d1117&title_color=58A6FF&text_color=c9d1d9)
+![Top languages](./assets/languages.svg)
 
-![GitHub Streak](https://streak-stats.demolab.com/?user=hallatar&theme=github-dark-blue&hide_border=true&background=0D1117&stroke=161B22&ring=58A6FF&fire=1F6FEB&currStreakNum=C9D1D9&sideNums=C9D1D9&currStreakLabel=58A6FF&sideLabels=8B949E&dates=8B949E)
+![GitHub Streak](./assets/streak.svg)
 
 ![Contribution snake](https://raw.githubusercontent.com/hallatar/hallatar/output/github-contribution-grid-snake-dark.svg)
 
