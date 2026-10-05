@@ -8,7 +8,6 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/stats.yml"
-      - "README.md"
 
 jobs:
   update-stats:
@@ -21,38 +20,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Generate stats card (public + private)
+        uses: stats-organization/github-readme-stats-action@v2
         with:
-          node-version: "20"
+          card: stats
+          options: >-
+            username=hallatar&show_icons=true&count_private=true&include_all_commits=true&theme=github_dark&hide_border=true&bg_color=0d1117&title_color=58A6FF&icon_color=58A6FF&text_color=c9d1d9
+          path: assets/stats.svg
+          token: ${{ secrets.README_TOKEN }}
 
-      - name: Setup PHP
+      - name: Generate top languages card (public + private)
+        uses: stats-organization/github-readme-stats-action@v2
+        with:
+          card: top-langs
+          options: >-
+            username=hallatar&layout=compact&count_private=true&langs_count=8&theme=github_dark&hide_border=true&bg_color=0d1117&title_color=58A6FF&text_color=c9d1d9
+          path: assets/languages.svg
+          token: ${{ secrets.README_TOKEN }}
+
+      - name: Setup PHP for streak stats
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
           tools: composer
 
-      - name: Generate stats and languages (includes private)
-        env:
-          PAT_1: ${{ secrets.README_TOKEN }}
-        run: |
-          mkdir -p assets
-          git clone --depth=1 https://github.com/anuraghazra/github-readme-stats.git /tmp/stats
-          cd /tmp/stats
-          npm ci
-          PAT_1="$PAT_1" npm start &
-          for i in $(seq 1 45); do
-            if curl -sf "http://127.0.0.1:3000/api?username=hallatar" >/dev/null; then
-              break
-            fi
-            sleep 2
-          done
-          curl -sf "http://127.0.0.1:3000/api?username=hallatar&show_icons=true&count_private=true&include_all_commits=true&theme=github_dark&hide_border=true&bg_color=0d1117&title_color=58A6FF&icon_color=58A6FF&text_color=c9d1d9" \
-            -o "$GITHUB_WORKSPACE/assets/stats.svg"
-          curl -sf "http://127.0.0.1:3000/api/top-langs/?username=hallatar&layout=compact&count_private=true&theme=github_dark&hide_border=true&bg_color=0d1117&title_color=58A6FF&text_color=c9d1d9" \
-            -o "$GITHUB_WORKSPACE/assets/languages.svg"
-
-      - name: Generate streak (includes private)
+      - name: Generate streak card (public + private)
         env:
           TOKEN: ${{ secrets.README_TOKEN }}
         run: |
@@ -61,7 +53,7 @@ jobs:
           composer install --no-interaction --no-dev
           printf "TOKEN=%s\n" "$TOKEN" > .env
           php -S 127.0.0.1:8000 >/tmp/streak-php.log 2>&1 &
-          for i in $(seq 1 30); do
+          for i in $(seq 1 45); do
             if curl -sf "http://127.0.0.1:8000/?user=hallatar" >/dev/null; then
               break
             fi
@@ -69,6 +61,7 @@ jobs:
           done
           curl -sf "http://127.0.0.1:8000/?user=hallatar&theme=github-dark-blue&hide_border=true&background=0D1117&stroke=161B22&ring=58A6FF&fire=1F6FEB&currStreakNum=C9D1D9&sideNums=C9D1D9&currStreakLabel=58A6FF&sideLabels=8B949E&dates=8B949E" \
             -o "$GITHUB_WORKSPACE/assets/streak.svg"
+          test -s "$GITHUB_WORKSPACE/assets/streak.svg"
 
       - name: Commit assets
         run: |
